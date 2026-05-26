@@ -1,0 +1,7 @@
+results_local/
+results/
+results_test/
+logs/
+__pycache__/
+*.pyc
+SP500
