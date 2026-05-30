@@ -32,7 +32,7 @@ EPOCHS="${EPOCHS:-2001}"   # CPU MPS is slow; size from the smoke-test per-epoch
 module purge
 module load apptainer pytorch/2.7.0
 
-REPRO_DIR="$HOME/qgan"
+REPRO_DIR="${SLURM_SUBMIT_DIR}"   # submit from the qgan dir; matches QFinance convention
 RESULTS_DIR="$REPRO_DIR/results_mps"
 PKG_DIR="$HOME/jax_packages"
 SIF="$CONTAINERDIR/pytorch-2.7.0.sif"
