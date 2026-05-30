@@ -23,8 +23,6 @@ print(f"  JAX version : {jax.__version__}")
 print(f"  JAX devices : {jax.devices()}")
 print(f"  JAX backend : {jax.default_backend()}")
 
-import JAX_QUIMB_Composite as jmm
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--seed",         type=int,   default=42)
 parser.add_argument("--bond_dim",     type=int,   required=True)
@@ -37,7 +35,20 @@ parser.add_argument("--alpha_acf",    type=float, default=0.0)
 parser.add_argument("--alpha_leverage", type=float, default=0.0)
 parser.add_argument("--alpha_emd",    type=float, default=1.0)
 parser.add_argument("--eval_every",   type=int,   default=50)
+parser.add_argument("--use_mps",      action="store_true",
+                    help="Use the quimb MPS circuit (bond_dim is ACTIVE) "
+                         "instead of the default full-state statevec simulator")
 args = parser.parse_args()
+
+# Select the circuit backend. Default = full-state statevec (bond_dim ignored,
+# exact at 10 qubits). --use_mps swaps in the quimb CircuitMPS path where the
+# bond dimension actually truncates. The statevec path is left untouched.
+if args.use_mps:
+    import JAX_QUIMB_Composite_MPS as jmm
+    print("  Circuit     : MPS (quimb CircuitMPS — bond_dim is ACTIVE)")
+else:
+    import JAX_QUIMB_Composite as jmm
+    print("  Circuit     : statevec (full-state — bond_dim ignored)")
 
 print("=" * 60)
 print(f"  Dechant JAX+Quimb Reproduction Run")
